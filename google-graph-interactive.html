@@ -175,7 +175,7 @@ OAuth.popup('google', function(error, authResult) {
 setTimeout( function () {
     grapher(miserables);
     alert("hello graph");
-}, 5000)
+}, 500)
 
 
 //grapher (miserables)
@@ -192,7 +192,8 @@ function grapher (miserables) {
         .canvas('chart-div')
         .fillStyle("white")
         .event("mousedown", pv.Behavior.pan())
-        .event("mousewheel", pv.Behavior.zoom(3));
+        .event("mousewheel", pv.Behavior.zoom(3))
+        
     
     console.log("vis:", vis)
     
@@ -212,13 +213,23 @@ function grapher (miserables) {
         .title(function(d){ return d.nodeName})
         .event("mousedown", pv.Behavior.drag())
         .event("drag", force)
+        
+        //EVENT HANDLER WORKING
+        .event("click", function(d) {
+        var nde = d.nodeName;
+        console.log("you clicked on node#", nde)
+        helloim(nde)
+        })
+        
+        
+        
+        
     .anchor("center").add(pv.Label)
     .textStyle("black")
     .text(function(d){ return d.nodeName});
     
+    
     vis.render();
-    
-    
     
     //END GRAPH CODE
 
