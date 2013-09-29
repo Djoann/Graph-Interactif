@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <title>Force-Directed Layout</title>
+    <script type="text/javascript" src="protovis.js"></script>
+    <script type="text/javascript" src="miserables.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+#red {
+    margin: 50px 0 0 50px;
+    position: fixed;
+}
+
+    </style>
+  </head>
+  <body>
+      <div id="red"><img src="lecamping.png" width="40%" alt="" /></div>
+    <script type="text/javascript+protovis">
+
+var w = document.body.clientWidth,
+    h = document.body.clientHeight,
+    colors = pv.Colors.category19();
+
+var vis = new pv.Panel()
+    .width(w)
+    .height(h)
+    .fillStyle("white")
+    .event("mousedown", pv.Behavior.pan())
+    .event("mousewheel", pv.Behavior.zoom(3));
+
+var force = vis.add(pv.Layout.Force)
+    .nodes(miserables.nodes)
+    .links(miserables.links);
+
+force.link.add(pv.Line);
+
+force.node.add(pv.Dot)
+    .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
+    .fillStyle(function(d) d.fix ? "brown" : colors(d.group))
+    .strokeStyle(function() this.fillStyle().darker())
+    .lineWidth(1)
+    .title(function(d){ return d.nodeName})
+    .event("mousedown", pv.Behavior.drag())
+    .event("drag", force)
+.anchor("center").add(pv.Label)
+.textStyle("black")
+.text(function(d){ return d.nodeName});
+
+vis.render();
+
+    </script>
+  </body>
+</html>

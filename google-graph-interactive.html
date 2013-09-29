@@ -1,0 +1,174 @@
+<html>
+  <head>
+    <title>Force-Directed Layout</title>
+    <script type="text/javascript" src="protovis.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    
+    <script src="oauth.js"></script>
+    <style type="text/css">
+
+body {
+  margin: 0;
+}
+
+#red {
+    margin: 50px 0 0 50px;
+    position: fixed;
+}
+
+
+
+#chart-div {
+    width: 100%;
+    height: 500px;
+}
+
+    </style>
+  </head>
+  <body>
+        <div id="chart-div"></div>
+<script type="text/javascript+protovis">
+
+var miserables = {
+  nodes:[
+    {nodeName:"Djoann", group:1},
+    {nodeName:"Napoleon", group:1},
+    {nodeName:"Mlle. Baptistine", group:4},
+    {nodeName:"Mme. Magloire", group:3},
+    {nodeName:"Countess", group:5},
+    {nodeName:"Geborand", group:6},
+    {nodeName:"Champtercier", group:8},
+    {nodeName:"Cravatte", group:7},
+    {nodeName:"Myriel", group:9},
+    {nodeName:"Old Man", group:1},
+    {nodeName:"Labarre", group:2},
+    {nodeName:"LeCamping", group:2}
+  ],
+  links:[
+    {source:1, target:0, value:1},
+    {source:2, target:0, value:8},
+    {source:3, target:0, value:10},
+    {source:3, target:2, value:6},
+    {source:4, target:0, value:1},
+    {source:5, target:0, value:1},
+    {source:6, target:0, value:1},
+    {source:7, target:0, value:1},
+    {source:8, target:0, value:2},
+    {source:9, target:0, value:1},
+    {source:11, target:10, value:1},
+    {source:11, target:3, value:3},
+    {source:11, target:2, value:3},
+    {source:11, target:0, value:5}
+  ]
+};
+
+
+
+
+
+
+
+
+
+OAuth.initialize('YtVhZOOSsYqy3OX6bKa1sYwppdY');
+
+//Using popup (option 1)
+OAuth.popup('google', function(error, authResult) {
+  //handle error with error
+  console.log(authResult);
+  
+  //use result.access_token in your API request
+  $.getJSON('https://www.google.com/m8/feeds/contacts/default/full/?access_token=' + 
+               authResult.access_token + "&alt=json&callback=?&start-index=1&max-results=20", function(result){
+        console.log("contact results:", result);  //JSON.stringify(result)
+        
+        var longer = result.feed.entry.length
+        
+        
+        
+        // putting data on miserable. node
+        for (var i = 0; i < longer; i++) {
+            var name = result.feed.entry[i].title.$t;
+            console.log("contact:", name);
+            
+            
+            var newNde = {nodeName: name, group:1}
+            
+            var number = i+11
+            var newLnks = {source: number, target:0, value:5}
+            
+            miserables.nodes.push(newNde);
+            miserables.links.push(newLnks);
+        }
+        // end for
+
+  });
+  
+});
+
+
+//console.log("nodes:", JSON.stringify(miserables.nodes));
+
+
+setTimeout( function () {
+    grapher(miserables);
+    alert("hello graph");
+}, 5000)
+
+
+//grapher (miserables)
+
+
+
+// GRAPH APPEND 
+function grapher (miserables) {
+
+
+    var colors = pv.Colors.category19();
+    
+    var vis = new pv.Panel()
+        .canvas('chart-div')
+        .fillStyle("white")
+        .event("mousedown", pv.Behavior.pan())
+        .event("mousewheel", pv.Behavior.zoom(3));
+    
+    console.log("vis:", vis)
+    
+    
+    
+    var force = vis.add(pv.Layout.Force)
+        .nodes(miserables.nodes)
+        .links(miserables.links);
+    
+    force.link.add(pv.Line);
+    
+    force.node.add(pv.Dot)
+        .size(function(d) (d.linkDegree + 4) * Math.pow(this.scale, -1.5))
+        .fillStyle(function(d) d.fix ? "brown" : colors(d.group))
+        .strokeStyle(function() this.fillStyle().darker())
+        .lineWidth(1)
+        .title(function(d){ return d.nodeName})
+        .event("mousedown", pv.Behavior.drag())
+        .event("drag", force)
+    .anchor("center").add(pv.Label)
+    .textStyle("black")
+    .text(function(d){ return d.nodeName});
+    
+    vis.render();
+    
+    
+    
+    //END GRAPH CODE
+
+
+}
+
+
+
+
+
+
+
+    </script>
+  </body>
+</html>
