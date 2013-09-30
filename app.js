@@ -25,8 +25,34 @@ var query = $(".remquery").val();
     } // end if
 } // end function
 
-function helloim(nde) {
-    console.log("heloim", nde)
+
+
+//LINKS FUNCTION : SET NODE TOGETHER
+var clicks = 0;
+function linkClick(ide) {
+    $('clicked').value = ++clicks;
+    console.log("clicks:", clicks);
+    
+    var isEven = function(someNumber) {
+            return (someNumber % 2 === 0) ? true : false;
+        };
+        // on odd clicks do this
+        if (isEven(clicks) === false) {
+            //alert("odd");
+            $(".linkqueryfrst").val(ide)
+        }
+        // on even clicks do this
+        else if (isEven(clicks) === true) {
+            //alert("even");
+            $(".linkquerysecd").val(ide)
+    } // end isEven Function
+}
+
+
+// PUSH HTML INFO CLICK
+function helloim(nde, ide) {
+    console.log("you clicked on node#", nde, "number:", ide)
+    $(".helloNode").html(nde + " number:"+ide);
 }
 
 
@@ -43,8 +69,12 @@ function addLnk() {
         } else {
         console.log(onequery, "linked via", secquery);
         
+        miserables.links.push({source:onequery, target:secquery, value:1});
+        grapher(miserables);
         
-
+        
+        
+        
         }// end if
 
     }

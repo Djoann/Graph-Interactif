@@ -40,8 +40,26 @@ body { width:100%; height:100%; margin:none; padding:none; }
         
 #inputcontrols {
         width: 70%;
-        }
+}
+
+.infobulle {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 4px 6px !important;
+    width: 100% !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    border-radius: 0px !important;
+}
+
+
+.helloNode {
+    font-family: Bebas Neue !important;
+}
+
     </style>
+
+
   </head>
   <body>
         <div id="chart-div"></div>
@@ -52,33 +70,24 @@ body { width:100%; height:100%; margin:none; padding:none; }
             <div id="title"><p class="title">Graph Note v1</p></div>
             
             <div id="inputcontrols">
-            
-                <input type="text" class="addquery" placeholder="NodeName" name="" value="" />
+                <div id="database">
+                    <p class="helloNode"></p>
+                </div>
+                <input type="text" class="addquery infobulle" placeholder="NodeName" name="" value="" />
                 <button onclick="addNde()">AddNode</button>
                 
-                <input type="text" class="remquery" placeholder="Node" name="" value="" />
+                <input type="text" class="remquery infobulle" placeholder="Node" name="" value="" />
                 <button onclick="remNde()">RemoveNode</button>
                 
                 <!--  Links :  -->
-                <input type="text" class="linkqueryfrst" placeholder="Link1" name="" value="" />
+                <input type="text" class="linkqueryfrst infobulle" placeholder="Link1" name="" value="" />
                 
-                <input type="text" class="linkquerysecd" placeholder="Link2" name="" value="" />
+                <input type="text" class="linkquerysecd infobulle" placeholder="Link2" name="" value="" />
                 
                 <button onclick="addLnk()">AddLink</button>
                 
-                <!-- Mutuals -->
-                <button onclick="mutuals()">Mutuals</button>
             
             </div> <!--  end inputcontrols   -->
-            
-            <div id="database">
-        <!--        <textarea id="hello">""</textarea>-->
-        <!--        <button id="submit">Submit</button>-->
-                <button id="getres">get</button>
-                <div id="example"></div>
-                <div id="map"></div>
-                <div id = "photos"></div>
-            </div>
             
             
         </div>  <!-- END CONTROLS -->
@@ -141,7 +150,7 @@ OAuth.popup('google', function(error, authResult) {
   
   //use result.access_token in your API request
   $.getJSON('https://www.google.com/m8/feeds/contacts/default/full/?access_token=' + 
-               authResult.access_token + "&alt=json&callback=?&start-index=1&max-results=20", function(result){
+               authResult.access_token + "&alt=json&callback=?&start-index=1&max-results=200", function(result){
         console.log("contact results:", result);  //JSON.stringify(result)
         
         var longer = result.feed.entry.length
@@ -216,9 +225,11 @@ function grapher (miserables) {
         
         //EVENT HANDLER WORKING
         .event("click", function(d) {
+        var ide = d.index;
         var nde = d.nodeName;
-        console.log("you clicked on node#", nde)
-        helloim(nde)
+        linkClick(ide)
+        
+        helloim(nde, ide)
         })
         
         
